@@ -21,18 +21,18 @@ RUN C:\TEMP\vs_buildtools.exe --quiet --wait --norestart --nocache `
     --add Microsoft.Component.MSBuild `
     --add Microsoft.Component.VC.Runtime.UCRTSDK `
     --add Microsoft.VisualStudio.Workload.VCTools `
-    --add Microsoft.VisualStudio.Component.VC.140 `
     --add Microsoft.VisualStudio.Component.VC.Tools.x86.x64 `
+    --add Microsoft.VisualStudio.Component.VC.Tools.ARM64 `
     --add Microsoft.VisualStudio.Component.Windows10SDK.17763 `
     --remove Microsoft.VisualStudio.Component.Windows10SDK.10240 `
     --remove Microsoft.VisualStudio.Component.Windows10SDK.10586 `
     --remove Microsoft.VisualStudio.Component.Windows10SDK.14393 `
-	--remove Microsoft.VisualStudio.Component.Windows81SDK `
+    --remove Microsoft.VisualStudio.Component.Windows81SDK `
  || IF "%ERRORLEVEL%"=="3010" EXIT 0
 
 # Remove temporary files
-RUN rmdir /S /Q C:\TEMP
+RUN rmdir /S /Q C:\TEMP && mkdir C:\TEMP
 
-# Default to PowerShell if no other command specified.
-ENTRYPOINT C:\BuildTools\Common7\Tools\VsDevCmd.bat &&
-CMD ["powershell.exe", "-NoLogo", "-ExecutionPolicy", "Bypass"]
+# Launch PowerShell with the development command prompt environment
+ENTRYPOINT ["C:\\BuildTools\\Common7\\Tools\\VsDevCmd.bat", "&&", `
+    "powershell.exe", "-NoLogo", "-ExecutionPolicy", "Bypass"]

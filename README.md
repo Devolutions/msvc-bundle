@@ -1,15 +1,15 @@
 # msvc-bundle: creating a resource bundle for Windows cross-compilation
 
 ## Create Windows build container image
-`docker build -t vs_buildtools:latest -m 2GB`
+`docker build -t vs_buildtools:latest -m 2GB .`
 
 ## Run powershell inside the consider with a volume mount
-`docker run -it vs_buildtools:latest -v C:\msvc-bundle:C:\msvc-bundle`
+`docker run -it -v C:\msvc-bundle:C:\TEMP vs_buildtools:latest`
 
 ## Copy files from the container to the volume mount
 
 ```
-$Env:MSVC_BUNDLE = "C:\msvc-bundle"
+$Env:MSVC_BUNDLE = "C:\TEMP"
 Copy-Item -Recurse -Path $Env:VCToolsInstallDir\include -Destination $Env:MSVC_BUNDLE\vctools\include
 Copy-Item -Recurse -Path $Env:VCToolsInstallDir\lib -Destination $Env:MSVC_BUNDLE\vctools\lib
 Copy-Item -Recurse -Path $Env:WindowsSdkDir\Include\$Env:WindowsSDKVersion\ $Env:MSVC_BUNDLE\winsdk\Include\$Env:WindowsSDKVersion
